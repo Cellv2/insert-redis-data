@@ -1,7 +1,5 @@
 import { createClient } from "redis";
 import { CONNECTION_STRING } from './config/secrets'
-import dotenv from 'dotenv';
-dotenv.config();
 
 const initClient = () => {
     if (!CONNECTION_STRING.length) {
