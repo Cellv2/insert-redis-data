@@ -1,5 +1,9 @@
 import { createClient } from "redis";
-import { CONNECTION_STRING } from './config/secrets'
+import { CONNECTION_STRING } from "./config/secrets";
+import { addRedisData } from "./services/redis/redis";
+
+// cli:
+// should flush db ?
 
 const initClient = () => {
     if (!CONNECTION_STRING.length) {
@@ -9,7 +13,7 @@ const initClient = () => {
         console.log("Using connection string found in .env");
         return createClient({ socket: { url: CONNECTION_STRING } });
     }
-}
+};
 
 const main = async () => {
     console.log("hiya!");
@@ -19,11 +23,11 @@ const main = async () => {
     client.on("error", (err) => console.log(`Redis error occurred: ${err}`));
 
     await client.connect();
-    await client.set("testings", "hahathisisatest");
-    console.log("key should be set");
-    console.log(`the test key's value was ${await client.get("testings")}`);
-}
+
+    addRedisData(client, 10, 3);
+
+    const allKeys = await client.keys("*");
+    console.log(allKeys);
+};
 
 (async () => await main())();
-
-
